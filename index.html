@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GestaoCondominio</title>
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #27597a;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --success-color: #2ecc71;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+     * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        background-color: #f5f7fa;
+        color: var(--dark-color);
+        padding: 0;
+        margin: 0;
+    }
+
+     .container {
+            max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: var(--box-shadow);
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+     h2 {
+        font-size: 1.8rem;
+        color: var(--primary-color);
+        margin: 25px 0 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--secondary-color);
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+         max-width: 500px;
+         margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .menu-button {
+        width: 100%;
+        padding: 15px 20px;
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        }
+
+    .menu-button:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 768px) {
+        .button-container {
+            width: 90%;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+        }
+            
+        h2 {
+            font-size: 1.5rem;
+        }
+     }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Gestão de Condomínio</h1>
+        </div>
+    </header>
+
+    <div class="button-container">
+        <button class="menu-button">Apartamentos</button>
+        <button class="menu-button" onclick="window.location.href='/pesquisaBlocos'">Blocos</button>
+        <button class="menu-button">Moradores</button>
+    </div>
+</body>
+</html>
