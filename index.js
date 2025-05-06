@@ -28,9 +28,20 @@ db.connect((err) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
-
 app.get('/cadastrar', (req, res) => {
     res.sendFile(path.join(__dirname, 'cadastrar.html'));
+});
+app.get('/apartamento', (req, res) => {
+    res.sendFile(path.join(__dirname, 'apartamento.html'));
+});
+app.get('/moradores', (req, res) => {
+    res.sendFile(path.join(__dirname, 'moradores.html'));
+});
+app.get('/pagamento', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pagamento.html'));
+});
+app.get('/manutencao', (req, res) => {
+    res.sendFile(path.join(__dirname, 'manutencao.html'));
 });
 
 app.post('/pesquisaBlocos', (req, res) => {
@@ -75,9 +86,18 @@ app.post('/editBloco/:id', (req, res) => {
 });
 
 app.get('/pesquisaBlocos', function(req, res) {
-    const listar = "SELECT * FROM bloco";
+    const searchTerm = req.query.search || '';
+    let listar;
+    let params = [];
+    
+    if (searchTerm) {
+        listar = "SELECT * FROM bloco WHERE bloco LIKE ? OR apartamento LIKE ?";
+        params = [`%${searchTerm}%`, `%${searchTerm}%`];
+    } else {
+        listar = "SELECT * FROM bloco";
+    }
 
-    db.query(listar, function(err, rows) {
+    db.query(listar, params, function(err, rows) {
         if(!err) {
             console.log("Consulta realizada com sucesso!");
             res.send(`
@@ -85,7 +105,7 @@ app.get('/pesquisaBlocos', function(req, res) {
                 <head>
                 <title>Relatório de Blocos</title>
                 <style>
-                :root {
+                                :root {
                     --primary-color: #2c3e50;
                     --secondary-color: #3498db;
                     --accent-color: #e74c3c;
@@ -125,7 +145,6 @@ app.get('/pesquisaBlocos', function(req, res) {
                     border-bottom: 2px solid var(--secondary-color);
                 }
                 
-                /* Estilos da Tabela */
                 table {
                     width: 100%;
                     border-collapse: collapse;
@@ -148,17 +167,9 @@ app.get('/pesquisaBlocos', function(req, res) {
                     font-weight: bold;
                     text-transform: uppercase;
                     font-size: 0.9rem;
+                    text-align: left;
                 }
                 
-                tr:nth-child(even) {
-                    background-color: #f8f9fa;
-                }
-                
-                tr:hover {
-                    background-color: #f1f1f1;
-                }
-                
-                /* Botões de ação */
                 .action-btn {
                     padding: 8px 12px;
                     margin: 0 3px;
@@ -188,26 +199,45 @@ app.get('/pesquisaBlocos', function(req, res) {
                     background-color: #c0392b;
                 }
                 
-                /* Botão/Link Voltar */
                 .back-link {
                     display: inline-block;
                     margin-top: 20px;
-                    padding: 12px 25px;
-                    background-color: var(--secondary-color);
-                    color: white;
+                    padding: 10px 20px;
+                    background-color: var(--light-color);
+                    color: var(--primary-color);
                     text-decoration: none;
                     border-radius: var(--border-radius);
-                    font-weight: bold;
+                    font-weight: 500;
                     transition: all 0.3s ease;
+                    border: 1px solid #ddd;
                 }
                 
                 .back-link:hover {
-                    background-color: #2980b9;
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    background-color: #e0e0e0;
+                    transform: translateY(-1px);
                 }
                 
-                /* Responsividade */
+                .cadastrar-btn-container {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                
+                .cadastrar-btn {
+                    padding: 12px 25px;
+                    background-color: var(--primary-color);
+                    color: white;
+                    border: none;
+                    border-radius: var(--border-radius);
+                    cursor: pointer;
+                    font-weight: 500;
+                    transition: all 0.3s;
+                }
+                
+                .cadastrar-btn:hover {
+                    background-color: #1a252f;
+                    transform: translateY(-2px);
+                }
+                
                 @media (max-width: 768px) {
                     body {
                         padding: 10px;
@@ -233,19 +263,99 @@ app.get('/pesquisaBlocos', function(req, res) {
                         font-size: 0.8rem;
                     }
                 }
+                .search-container {
+                    margin: 20px 0;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                }
+                
+                .search-box {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .search-input {
+                    padding: 10px 15px;
+                    border: 1px solid #ddd;
+                    border-radius: var(--border-radius) 0 0 var(--border-radius);
+                    font-size: 1rem;
+                    width: 300px;
+                }
+                
+                .search-button {
+                    padding: 10px 15px;
+                    background-color: var(--secondary-color);
+                    color: white;
+                    border: none;
+                    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                
+                .search-button:hover {
+                    background-color: #2980b9;
+                }
+                
+                .clear-search {
+                    margin-left: 10px;
+                    padding: 10px 15px;
+                    background-color: var(--light-color);
+                    color: var(--dark-color);
+                    border: 1px solid #ddd;
+                    border-radius: var(--border-radius);
+                    cursor: pointer;
+                    transition: all 0.3s;
+                }
+                
+                .clear-search:hover {
+                    background-color: #e0e0e0;
+                }
+                
+                @media (max-width: 768px) {
+                    .search-container {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                    
+                    .search-box {
+                        width: 100%;
+                        margin-bottom: 10px;
+                    }
+                    
+                    .search-input {
+                        width: 100%;
+                    }
+                }
                 </style>
                 </head>
                 <body>
                     <div class="container">
-                        <h1>Blocos e apartamentos</h1>
+                        <h1>Blocos </h1>
+                        
+                        <div class="search-container">
+                            <div class="search-box">
+                                <form action="/pesquisaBlocos" method="get">
+                                    <input type="text" name="search" class="search-input" placeholder="Pesquisar bloco ou apartamento..." value="${searchTerm}">
+                                    <button type="submit" class="search-button">Pesquisar</button>
+                                </form>
+                                ${searchTerm ? `<button onclick="location.href='/pesquisaBlocos'" class="clear-search">Limpar</button>` : ''}
+                            </div>
+                            <a href="/cadastrar" style="text-decoration: none;">
+                                <button style="padding: 10px 15px; background-color: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer;">Cadastrar Novo Bloco</button>
+                            </a>
+                        </div>
+                        
                         <table>
                             <tr>
                                 <th>ID</th>
                                 <th>Bloco</th>
-                                <th>Apartamentos</th>
+                                <th>qtd de Apartamentos</th>
                                 <th>Ações</th>
                             </tr>
-                            ${rows.map(row => `
+                            ${rows.length > 0 ? 
+                              rows.map(row => `
                                 <tr>
                                     <td>${row.id}</td>
                                     <td>${row.bloco}</td>
@@ -255,12 +365,10 @@ app.get('/pesquisaBlocos', function(req, res) {
                                         <button class="action-btn delete-btn" onclick="confirmDelete(${row.id})">Excluir</button>
                                     </td>
                                 </tr>
-                            `).join('')}
+                              `).join('') : 
+                              `<tr><td colspan="4" style="text-align: center;">Nenhum resultado encontrado</td></tr>`}
                         </table>
                         <a href="/" class="back-link">Voltar</a>
-                        <a href="/cadastrar">
-                            <button style="padding: 12px 25px; background-color: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer; margin-top: 20px;">Cadastrar Novo Bloco</button>
-                        </a>
                     </div>
 
                     <script>
@@ -285,7 +393,6 @@ app.get('/pesquisaBlocos', function(req, res) {
         }
     });
 });
-
 app.get('/editarBloco/:id', (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM bloco WHERE id = ?";
@@ -342,7 +449,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     border-bottom: 2px solid var(--secondary-color);
                 }
                 
-                /* Estilos da Tabela */
                 table {
                     width: 100%;
                     border-collapse: collapse;
@@ -368,7 +474,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     text-align: left;
                 }
                 
-                /* Alinhamento das colunas */
                 td:nth-child(1) { /* ID */
                     text-align: right;
                     padding-right: 30px;
@@ -395,7 +500,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     background-color: #f1f1f1;
                 }
                 
-                /* Botões de ação */
                 .action-btn {
                     padding: 8px 12px;
                     margin: 0 3px;
@@ -425,7 +529,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     background-color: #c0392b;
                 }
                 
-                /* Botão/Link Voltar */
                 .back-link {
                     display: inline-block;
                     margin-top: 20px;
@@ -444,7 +547,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     transform: translateY(-1px);
                 }
                 
-                /* Botão Cadastrar */
                 .cadastrar-btn-container {
                     text-align: center;
                     margin-top: 20px;
@@ -466,7 +568,6 @@ app.get('/editarBloco/:id', (req, res) => {
                     transform: translateY(-2px);
                 }
                 
-                /* Responsividade */
                 @media (max-width: 768px) {
                     body {
                         padding: 10px;
