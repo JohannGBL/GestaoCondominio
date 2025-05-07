@@ -10,11 +10,17 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+const sslOptions = {
+    ca: fs.readFileSync(''), 
+}
+
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'GestaoDeCondominios',
+    host: 'qualquernomeservidor.database.windows.net',
+    user: 'root@',
+    password: 'Cedup@2025',
+    database: 'GestãoDeCondominios',
+    port:3306,
+    ssl: sslOptions
 });
 
 db.connect((err) => {
