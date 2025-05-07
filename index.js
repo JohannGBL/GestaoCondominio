@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const sslOptions = {
-    ca: fs.readFileSync(''), 
+    ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'), 
 }
 
 const db = mysql.createConnection({
